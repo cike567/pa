@@ -17,9 +17,15 @@
 
 #### 使用说明
 
-1. xxxx
-2. xxxx
-3. xxxx
+~~~
+mvn help:system
+
+mvn archetype:generate -X -DarchetypeCatalog=local
+
+mvn test
+
+mvn package
+~~~
 
 #### 参与贡献
 
