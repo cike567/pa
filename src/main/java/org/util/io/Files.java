@@ -1,4 +1,4 @@
-package org.util;
+package org.util.io;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,11 +20,12 @@ public class Files {
 			file.getParentFile().mkdirs();
 		}
 		file.createNewFile();
+		log.info(file.getAbsolutePath());
 		return file;
 	}
 
 	public static String read(String fileName) {
-		return IO.read(inputStream(fileName));
+		return Stream.read(inputStream(fileName));
 	}
 
 	public static List<String> read(File file) throws IOException {

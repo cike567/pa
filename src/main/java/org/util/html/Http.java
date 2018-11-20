@@ -1,5 +1,6 @@
-package org.util;
+package org.util.html;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -9,15 +10,24 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.util.Strings;
+import org.util.io.Files;
+import org.util.io.Stream;
 
-public class Html {
+public class Http {
 
-	public static String curl(String http) throws IOException {
+	public static File curl(String url) throws IOException {
+		String html = ChromeDevTools.html(url);
+		File file = Files.write(html, "html");
+		return file;
+	}
+
+	public static String get(String http) throws IOException {
 		String rs = null;
 		URL url = new URL(http);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		InputStream in = connection.getInputStream();
-		rs = IO.read(in, "GBK");
+		rs = Stream.read(in, "GBK");
 		in.close();
 		return rs;
 	}
@@ -34,6 +44,6 @@ public class Html {
 		return args;
 	}
 
-	public static final Logger logger = LoggerFactory.getLogger(Html.class);
+	public static final Logger logger = LoggerFactory.getLogger(Http.class);
 
 }

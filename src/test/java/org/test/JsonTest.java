@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.json.JSONArray;
 import org.junit.Test;
-import org.util.Files;
 import org.util.html.Json;
+import org.util.io.Files;
 
 /**
  * Unit test for simple App.
