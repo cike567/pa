@@ -23,11 +23,15 @@ public class Http {
 	}
 
 	public static String get(String http) throws IOException {
+		return get(http, "GBK");
+	}
+
+	public static String get(String http, String charset) throws IOException {
 		String rs = null;
 		URL url = new URL(http);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		InputStream in = connection.getInputStream();
-		rs = Stream.read(in, "GBK");
+		rs = Stream.read(in, charset);
 		in.close();
 		return rs;
 	}

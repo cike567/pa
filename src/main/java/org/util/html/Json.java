@@ -13,6 +13,10 @@ import org.slf4j.LoggerFactory;
 
 public class Json {
 
+	public static String toString(Object object) {
+		return new JSONObject(object).toString();
+	}
+
 	/// select
 
 	public Json select(String[] keys) {
@@ -204,7 +208,7 @@ public class Json {
 			if (temp.startsWith("{")) {
 				object = new JSONObject(temp);
 			} else {
-				object = new JSONObject();
+				object = (JSONObject) array().get(0);
 			}
 		}
 		return object;

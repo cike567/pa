@@ -1,4 +1,4 @@
-package org.test;
+package org.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +30,12 @@ public class TBTest {
 		Search.samestyle(q);
 	}
 
-	// @Test
+	@Test
 	public void testTB() throws IOException {
 		// "singleauction", "data"
 		// String url =
 		// "https://s.taobao.com/search?type=samestyle&app=i2i&rec_type=1&uniqpid=-366819228&nid=566590244997";
-		String fileName = "Samestyle.csv";
+		String fileName = "src/main/resources/Samestyle.csv";
 		List<String> list = Files.read(new File(fileName));
 		for (String url : list) {
 			File file = Search.items(url);
