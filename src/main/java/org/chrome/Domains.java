@@ -1,6 +1,7 @@
 package org.chrome;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,27 +15,13 @@ import lombok.Data;
 public class Domains {
 
 	public static Domains navigate(String url) {
-		Map<String, Object> params = new HashMap<String, Object>() {
-			{
-				put("url", url);
-			}
-		};
-		Request navigate = request("Page.navigate", params);
-		List<Request> request = new ArrayList<Request>();
-		request.add(navigate);
-		return new Domains(request);
-
+		Request navigate = new Request("Page.navigate");
+		navigate.setParams("url", url);
+		return new Domains(new ArrayList<Request>(Arrays.asList(navigate)));
 	}
 
 	public void document() {
 
-	}
-
-	public static Request request(String method, Map<String, Object> params) {
-		Request request = new Request();
-		request.setMethod(method);
-		request.setParams(params);
-		return request;
 	}
 
 	List<Request> request;
@@ -42,7 +29,10 @@ public class Domains {
 
 	Domains(List<Request> request) {
 		this.request = request;
-		List<Integer> id = request.stream().map(Request::getId).collect(Collectors.toList());
+		List<Integer> id = request.stream().map(o -> {
+			o.setId(Devtools.id());
+			return o.getId();
+		}).collect(Collectors.toList());
 		response = new Response(id);
 	}
 

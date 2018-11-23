@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.util.html.Json;
@@ -17,8 +18,11 @@ public class Response implements Message {
 
 	@Override
 	public void handle(String message) {
-		new Json(message);
-		latch.countDown();
+		JSONObject response = new Json(message).object();
+		log.info("{}", response);
+		if (response.has(ID) && id.contains(response.get(ID))) {
+			latch.countDown();
+		}
 	}
 
 	public void close() throws IOException {
@@ -34,9 +38,11 @@ public class Response implements Message {
 		latch = new CountDownLatch(id.size());
 	}
 
-	List<Integer> id;
+	private String ID = "id";
 
-	CountDownLatch latch;
+	private List<Integer> id;
+
+	private CountDownLatch latch;
 
 	public final Logger log = LoggerFactory.getLogger(this.getClass());
 

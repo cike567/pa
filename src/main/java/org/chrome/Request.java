@@ -25,4 +25,14 @@ public class Request {
 	public String toString() {
 		return Json.toString(this);
 	}
+
+	public Request(String method) {
+		this.method = method;
+	}
+
+	public Request(String method, Map<String, Object> params) {
+		this.method = method;
+		this.params = params;
+	}
+
 }

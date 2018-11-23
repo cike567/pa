@@ -39,17 +39,24 @@ public class WSTest {
 	public void testCDP() throws IOException, InterruptedException {
 		// Exec.kill("chrome");
 		String url = "https://www.baidu.com/";
+		url = "https://s.taobao.com/";
 		Domains d = Domains.navigate(url);
 		Devtools client = new Devtools(9222);
 		new Thread(client).start();
-		client.send(d);
-		url = "https://s.taobao.com/";
-		Request request = new Request();
+
+		Request request = new Request("Page.enable");
 		request.setId(client.id());
-		request.setMethod("Page.navigate");
-		request.setParams("url", url);
+		// request.setParams("url", url);
 		client.send(request);
-		client.send(request);
+		// client.send(request);
+		client.send(d);
+		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+		while (true) {
+			String line = r.readLine();
+			if (line.equals("quit"))
+				break;
+			client.send(line);
+		}
 
 	}
 

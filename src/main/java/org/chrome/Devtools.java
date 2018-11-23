@@ -53,17 +53,17 @@ public class Devtools implements Runnable {
 		Message response = domains.getResponse();
 		client.setMessage(response);
 		request.stream().forEach((v) -> {
-			v.setId(id());
+			// v.setId(id());
 			this.request.add(v);
 		});
 		response.close();
 	}
 
-	public Integer id() {
+	public static Integer id() {
 		return id.incrementAndGet();
 	}
 
-	private AtomicInteger id = new AtomicInteger(0);
+	private static AtomicInteger id = new AtomicInteger(0);
 
 	private BlockingQueue<Request> request = new LinkedBlockingQueue<Request>();
 
