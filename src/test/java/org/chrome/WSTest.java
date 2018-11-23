@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.util.WebSocketClient;
+import org.ws.WebSocketClient;
 
 /**
  * Unit test for simple App.
@@ -38,12 +38,18 @@ public class WSTest {
 	@Test
 	public void testCDP() throws IOException, InterruptedException {
 		// Exec.kill("chrome");
-		Domains d = new Domains();
+		String url = "https://www.baidu.com/";
+		Domains d = Domains.navigate(url);
 		Devtools client = new Devtools(9222);
-		client.send(d.navigate("https://www.baidu.com/"));
 		new Thread(client).start();
-		client.send(d.navigate("https://www.baidu.com/"));
-		client.close();
+		client.send(d);
+		url = "https://s.taobao.com/";
+		Request request = new Request();
+		request.setId(client.id());
+		request.setMethod("Page.navigate");
+		request.setParams("url", url);
+		client.send(request);
+		client.send(request);
 
 	}
 

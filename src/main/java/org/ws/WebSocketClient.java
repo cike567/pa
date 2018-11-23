@@ -1,8 +1,7 @@
-package org.util;
+package org.ws;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.concurrent.CountDownLatch;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
@@ -16,7 +15,6 @@ import javax.websocket.WebSocketContainer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.util.html.Json;
 
 import lombok.Setter;
 
@@ -25,6 +23,11 @@ import lombok.Setter;
 public class WebSocketClient {
 
 	public WebSocketClient(String uri) {
+		this(uri, new LogMessage());
+	}
+
+	public WebSocketClient(String uri, Message meseage) {
+		this.message = message;
 		log.info(uri);
 		try {
 			connect(uri);
@@ -51,10 +54,8 @@ public class WebSocketClient {
 	}
 
 	@OnMessage
-	public void onMessage(String message) {
-		new Json(message);
-		log.info(message);
-		latch.countDown();
+	public void onMessage(String msg) {
+		message.handle(msg);
 	}
 
 	@OnError
@@ -67,7 +68,7 @@ public class WebSocketClient {
 		log.info(c.toString());
 	}
 
-	CountDownLatch latch;
+	Message message;
 
 	Session session;
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

@@ -1,15 +1,19 @@
 package org.chrome;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.util.Exec;
-import org.util.WebSocketClient;
 import org.util.html.Json;
+import org.ws.Message;
+import org.ws.WebSocketClient;
 
 public class Devtools implements Runnable {
 
@@ -17,12 +21,11 @@ public class Devtools implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				client.send(request.take().toString());
+				send(request.take().toString());
 			} catch (IOException | InterruptedException e) {
 				log.error(e.getMessage());
 			}
 		}
-
 	}
 
 	Devtools(int port) {
@@ -32,37 +35,44 @@ public class Devtools implements Runnable {
 			String version = HttpEndpoints.LIST.get();
 			String uri = new Json(version).object().getString(URL);
 			client = new WebSocketClient(uri);
-			/*
-			 * BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
-			 * while (true) { String line = r.readLine(); if (line.equals("quit")) break;
-			 * client.send(line); }
-			 */
-
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
-
 	}
 
 	public void send(String text) throws IOException {
 		client.send(text);
 	}
 
-	public void send(Request e) throws IOException {
-		this.request.add(e);
+	public void send(Request request) throws IOException {
+		send(new Domains(new ArrayList<Request>(Arrays.asList(request))));
 	}
 
-	public void close() throws InterruptedException {
-		CountDownLatch latch = new CountDownLatch(request.size());
-		client.setLatch(latch);
-		latch.await();
+	public void send(Domains domains) throws IOException {
+		List<Request> request = domains.getRequest();
+		Message response = domains.getResponse();
+		client.setMessage(response);
+		request.stream().forEach((v) -> {
+			v.setId(id());
+			this.request.add(v);
+		});
+		response.close();
 	}
 
-	WebSocketClient client;
-	public BlockingQueue<Request> request = new LinkedBlockingQueue<Request>();
+	public Integer id() {
+		return id.incrementAndGet();
+	}
 
-	String CHROME_HEADLESS = "chrome.exe --remote-debugging-port=%s --headless";
-	String URL = "webSocketDebuggerUrl";
-	public static final Logger log = LoggerFactory.getLogger(Devtools.class);
+	private AtomicInteger id = new AtomicInteger(0);
+
+	private BlockingQueue<Request> request = new LinkedBlockingQueue<Request>();
+
+	private String CHROME_HEADLESS = "chrome.exe --remote-debugging-port=%s --headless";
+
+	private String URL = "webSocketDebuggerUrl";
+
+	private WebSocketClient client;
+
+	public final Logger log = LoggerFactory.getLogger(this.getClass());
 
 }
