@@ -26,7 +26,7 @@ public class WebSocketClient {
 		this(uri, new LogMessage());
 	}
 
-	public WebSocketClient(String uri, Message meseage) {
+	public WebSocketClient(String uri, Message message) {
 		this.message = message;
 		log.info(uri);
 		try {
@@ -54,7 +54,7 @@ public class WebSocketClient {
 	}
 
 	@OnMessage
-	public void onMessage(String msg) {
+	public void onMessage(String msg) throws IOException {
 		message.handle(msg);
 	}
 
@@ -68,8 +68,9 @@ public class WebSocketClient {
 		log.info(c.toString());
 	}
 
-	Message message;
+	private Message message;
 
-	Session session;
+	private Session session;
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 }

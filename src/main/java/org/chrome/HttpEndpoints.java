@@ -10,12 +10,11 @@ public enum HttpEndpoints {
 	CLOSE("/json/close/");// {targetId}
 
 	String path;
-	// String query;
+
 	String host = "http://localhost:9222";
 
-	HttpEndpoints(String path) {// ,String query
+	HttpEndpoints(String path) {
 		this.path = path;
-		// this.query=query;
 	}
 
 	public String get() throws IOException {
@@ -28,7 +27,6 @@ public enum HttpEndpoints {
 
 	public String get(String host, String query) throws IOException {
 		return Http.get(host + path + query, "UTF-8");
-
 	}
 
 }

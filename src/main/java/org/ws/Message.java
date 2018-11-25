@@ -1,7 +1,11 @@
 package org.ws;
 
-import java.io.Closeable;
+import java.io.IOException;
 
-public interface Message extends Closeable {
-	public void handle(String message);
+public interface Message {//
+
+	public void handle(String message) throws IOException;
+
+	public String result() throws InterruptedException;
+
 }

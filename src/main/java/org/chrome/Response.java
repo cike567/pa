@@ -10,39 +10,59 @@ import org.slf4j.LoggerFactory;
 import org.util.html.Json;
 import org.ws.Message;
 
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//@NoArgsConstructor
 @Setter
+@NoArgsConstructor
 public class Response implements Message {
 
 	@Override
-	public void handle(String message) {
-		JSONObject response = new Json(message).object();
+	public void handle(String message) throws IOException {
+		result = message;
+		Json json = new Json(message);
+		JSONObject response = json.object();
 		log.info("{}", response);
 		if (response.has(ID) && id.contains(response.get(ID))) {
+			handle(json);
 			latch.countDown();
 		}
 	}
 
-	public void close() throws IOException {
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
-			log.error(e.getMessage());
+	protected void handle(Json json) {
+	}
+
+	public String result() throws InterruptedException {
+
+		latch.await();
+
+		return result;
+	}
+
+	public Integer peek(int i) {
+		if (id.size() > i) {
+			return id.get(i);
+		} else {
+			return null;
 		}
 	}
 
-	public Response(List<Integer> id) {
+	public void setId(List<Integer> id) {
 		this.id = id;
 		latch = new CountDownLatch(id.size());
 	}
 
-	private String ID = "id";
+	public Response(List<Integer> id) {
+		setId(id);
+	}
 
-	private List<Integer> id;
+	protected String result;
 
-	private CountDownLatch latch;
+	protected String ID = "id";
+
+	protected List<Integer> id;
+
+	protected CountDownLatch latch;
 
 	public final Logger log = LoggerFactory.getLogger(this.getClass());
 

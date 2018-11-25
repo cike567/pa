@@ -35,6 +35,12 @@ public class JsonTest {
 		Json json = new Json(temp);
 		System.out.println(json.select(keys).array());
 
+		temp = "{\"result\":{\"root\":{\"nodeName\":\"#document\",\"childNodeCount\":2,\"backendNodeId\":3,\"localName\":\"\",\"baseURL\":\"https://s.taobao.com/\",\"nodeValue\":\"\",\"children\":[{\"nodeName\":\"html\",\"backendNodeId\":5,\"localName\":\"\",\"systemId\":\"\",\"nodeValue\":\"\",\"nodeType\":10,\"nodeId\":2,\"parentId\":1,\"publicId\":\"\"},{\"nodeName\":\"HTML\",\"childNodeCount\":2,\"backendNodeId\":6,\"localName\":\"html\",\"nodeValue\":\"\",\"children\":[{\"nodeName\":\"HEAD\",\"childNodeCount\":36,\"backendNodeId\":7,\"localName\":\"head\",\"nodeValue\":\"\",\"attributes\":[],\"nodeType\":1,\"nodeId\":4,\"parentId\":3},{\"nodeName\":\"BODY\",\"childNodeCount\":11,\"backendNodeId\":8,\"localName\":\"body\",\"nodeValue\":\"\",\"attributes\":[\"id\",\"index\",\"data-spm\",\"1\"],\"nodeType\":1,\"nodeId\":5,\"parentId\":3}],\"frameId\":\"621B1F2E747CAF12FE7578B5AAA583B2\",\"attributes\":[\"class\",\"ks-webkit537 ks-webkit ks-chrome70 ks-chrome\"],\"nodeType\":1,\"nodeId\":3,\"parentId\":1}],\"documentURL\":\"https://s.taobao.com/\",\"nodeType\":9,\"nodeId\":1,\"xmlVersion\":\"\"}},\"id\":16}";
+		json = new Json(temp);
+		keys = new String[] { "result", "root", "nodeId" };
+		json.select(keys);
+		System.out.print(json.object());
+
 	}
 
 	@Test

@@ -10,9 +10,9 @@ import lombok.Data;
 @Data
 public class Request {
 
-	String method;
-	Map<String, Object> params;
-	int id;
+	private String method;
+	private Map<String, Object> params;
+	private int id;
 
 	public void setParams(String k, Object v) {
 		params = new HashMap<String, Object>() {
@@ -28,6 +28,7 @@ public class Request {
 
 	public Request(String method) {
 		this.method = method;
+		this.id = Devtools.id();
 	}
 
 	public Request(String method, Map<String, Object> params) {

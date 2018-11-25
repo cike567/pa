@@ -15,48 +15,57 @@ import org.util.html.Json;
 import org.ws.Message;
 import org.ws.WebSocketClient;
 
-public class Devtools implements Runnable {
-
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				send(request.take().toString());
-			} catch (IOException | InterruptedException e) {
-				log.error(e.getMessage());
-			}
-		}
-	}
+public class Devtools {
 
 	Devtools(int port) {
 		String exe = String.format(CHROME_HEADLESS, port);
 		try {
 			Exec.run(exe);
-			String version = HttpEndpoints.LIST.get();
+			String version = get(HttpEndpoints.LIST);
 			String uri = new Json(version).object().getString(URL);
 			client = new WebSocketClient(uri);
+			new Thread(() -> {
+				while (true) {
+					try {
+						Request r = request.take();
+						send(r.toString());
+					} catch (IOException | InterruptedException e) {
+						log.error(e.getMessage());
+					}
+				}
+			}).start();
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	public String get(HttpEndpoints endpoints, String... args) throws IOException {
+		if (args.length == 0) {
+			args = new String[] { "" };
+		}
+		return endpoints.get(args[0]);
 	}
 
 	public void send(String text) throws IOException {
 		client.send(text);
 	}
 
-	public void send(Request request) throws IOException {
+	public void send(Request request) throws IOException, InterruptedException {
+		Integer id = request.getId();
+		if (id == null || id == 0) {
+			request.setId(id());
+		}
 		send(new Domains(new ArrayList<Request>(Arrays.asList(request))));
 	}
 
-	public void send(Domains domains) throws IOException {
+	public String send(Domains domains) throws IOException, InterruptedException {
 		List<Request> request = domains.getRequest();
 		Message response = domains.getResponse();
 		client.setMessage(response);
 		request.stream().forEach((v) -> {
-			// v.setId(id());
 			this.request.add(v);
 		});
-		response.close();
+		return response.result();
 	}
 
 	public static Integer id() {
