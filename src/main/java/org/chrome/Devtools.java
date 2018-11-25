@@ -13,7 +13,7 @@ import org.ws.WebSocketClient;
 
 public class Devtools {
 
-	Devtools(int port) {
+	public Devtools(int port) {
 		String exe = String.format(CHROME_HEADLESS, port);
 		try {
 			Exec.run(exe);

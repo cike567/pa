@@ -1,6 +1,5 @@
 package org.util.html;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -8,18 +7,23 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.chrome.Devtools;
+import org.chrome.Domains;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.util.Strings;
-import org.util.io.Files;
 import org.util.io.Stream;
 
 public class Http {
 
-	public static File curl(String url) throws IOException {
-		String html = ChromeDevTools.html(url);
-		File file = Files.write(html, "html");
-		return file;
+	public static String curl(String url) throws IOException, InterruptedException {
+		Devtools client = new Devtools(9222);
+		Domains d = new Domains(client);
+		d.navigate(url);
+
+		String html = d.document();
+		// File file = Files.write(html, "html");
+		return html;
 	}
 
 	public static String get(String http) throws IOException {

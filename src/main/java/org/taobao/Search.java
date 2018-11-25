@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.util.Foreach;
-import org.util.html.ChromeDevTools;
 import org.util.html.Http;
 import org.util.html.Json;
 import org.util.io.Files;
@@ -19,7 +18,7 @@ public class Search {
 	 * file = Files.write(content, "json"); return file; }
 	 */
 
-	public static String samestyle(String q) throws IOException {
+	public static String samestyle(String q) throws IOException, InterruptedException {
 		String[] keys = { "mods", "itemlist", "data", "auctions", "i2iTags", "samestyle", "url" };
 		String url = String.format(SEARCH, q);
 		String rs = search(url, keys, new Foreach() {
@@ -39,7 +38,7 @@ public class Search {
 		return rs;
 	}
 
-	public static File items(String url) throws IOException {
+	public static File items(String url) throws IOException, InterruptedException {
 		String[] keys = { "mods", "recitem", "data", "items" };
 		String rs = search(url, keys, new Foreach() {
 
@@ -55,16 +54,16 @@ public class Search {
 		return file;
 	}
 
-	private static File search(String q, int p) throws IOException {
-		String url = String.format(SEARCH, q + Page.args(p));
-		return Http.curl(url);
-	}
+	/*
+	 * private static File search(String q, int p) throws IOException { String url =
+	 * String.format(SEARCH, q + Page.args(p)); return Http.curl(url); }
+	 */
 
-	private static String search(String url, String[] keys, Foreach foreach) throws IOException {
+	private static String search(String url, String[] keys, Foreach foreach) throws IOException, InterruptedException {
 		StringBuffer sb = new StringBuffer();
 		int max = 1;
 		for (int i = 1; i <= max; i++) {
-			String html = ChromeDevTools.html(url + Page.args(i));
+			String html = Http.curl(url + Page.args(i));
 			// if (i == 1) {
 			max = Page.max(html);
 			// File file = Files.write(html, "html");

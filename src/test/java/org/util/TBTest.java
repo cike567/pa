@@ -25,13 +25,13 @@ public class TBTest {
 	}
 
 	// @Test
-	public void testSamestyle() throws IOException {
+	public void testSamestyle() throws IOException, InterruptedException {
 		String q = "衬衣";
 		Search.samestyle(q);
 	}
 
-	@Test
-	public void testTB() throws IOException {
+	// @Test
+	public void testTB() throws IOException, InterruptedException {
 		// "singleauction", "data"
 		// String url =
 		// "https://s.taobao.com/search?type=samestyle&app=i2i&rec_type=1&uniqpid=-366819228&nid=566590244997";

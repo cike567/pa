@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.util.html.Http;
+import org.util.io.Files;
 
 /**
  * Unit test for simple App.
@@ -19,10 +20,11 @@ public class HtmlTest {
 	}
 
 	@Test
-	public void testCurl() throws IOException {
+	public void testCurl() throws IOException, InterruptedException {
 		String url = "https://s.taobao.com/search?type=samestyle&app=i2i&rec_type=1&uniqpid=-1356293700&nid=575553233524";
-		File file = Http.curl(url);
-		System.out.print(file);
+		String html = Http.curl(url);
+		File file = Files.write(html, "html");
+		System.out.print(file.getAbsolutePath());
 	}
 
 }
