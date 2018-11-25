@@ -1,7 +1,6 @@
 package org.chrome;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import org.json.JSONObject;
@@ -10,11 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.util.html.Json;
 import org.ws.Message;
 
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
-@NoArgsConstructor
 public class Response implements Message {
 
 	@Override
@@ -23,44 +20,31 @@ public class Response implements Message {
 		Json json = new Json(message);
 		JSONObject response = json.object();
 		log.info("{}", response);
-		if (response.has(ID) && id.contains(response.get(ID))) {
+		if (response.has(ID) && response.get(ID).equals(id)) {
 			handle(json);
 			latch.countDown();
 		}
 	}
 
+	// TODO
 	protected void handle(Json json) {
 	}
 
 	public String result() throws InterruptedException {
-
 		latch.await();
-
 		return result;
 	}
 
-	public Integer peek(int i) {
-		if (id.size() > i) {
-			return id.get(i);
-		} else {
-			return null;
-		}
-	}
-
-	public void setId(List<Integer> id) {
+	public Response(int id) {
 		this.id = id;
-		latch = new CountDownLatch(id.size());
-	}
-
-	public Response(List<Integer> id) {
-		setId(id);
+		latch = new CountDownLatch(1);
 	}
 
 	protected String result;
 
 	protected String ID = "id";
 
-	protected List<Integer> id;
+	protected Integer id; // protected List<Integer> id;
 
 	protected CountDownLatch latch;
 

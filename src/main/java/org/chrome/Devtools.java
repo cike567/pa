@@ -1,9 +1,6 @@
 package org.chrome;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.util.Exec;
 import org.util.html.Json;
-import org.ws.Message;
 import org.ws.WebSocketClient;
 
 public class Devtools {
@@ -27,7 +23,7 @@ public class Devtools {
 			new Thread(() -> {
 				while (true) {
 					try {
-						Request r = request.take();
+						Request r = requests.take();
 						send(r.toString());
 					} catch (IOException | InterruptedException e) {
 						log.error(e.getMessage());
@@ -50,21 +46,15 @@ public class Devtools {
 		client.send(text);
 	}
 
-	public void send(Request request) throws IOException, InterruptedException {
+	public String send(Request request) throws IOException, InterruptedException {
 		Integer id = request.getId();
 		if (id == null || id == 0) {
-			request.setId(id());
+			id = id();
+			request.setId(id);
 		}
-		send(new Domains(new ArrayList<Request>(Arrays.asList(request))));
-	}
-
-	public String send(Domains domains) throws IOException, InterruptedException {
-		List<Request> request = domains.getRequest();
-		Message response = domains.getResponse();
+		Response response = new Response(id);
+		requests.add(request);
 		client.setMessage(response);
-		request.stream().forEach((v) -> {
-			this.request.add(v);
-		});
 		return response.result();
 	}
 
@@ -74,7 +64,7 @@ public class Devtools {
 
 	private static AtomicInteger id = new AtomicInteger(0);
 
-	private BlockingQueue<Request> request = new LinkedBlockingQueue<Request>();
+	private BlockingQueue<Request> requests = new LinkedBlockingQueue<Request>();
 
 	private String CHROME_HEADLESS = "chrome.exe --remote-debugging-port=%s --headless";
 

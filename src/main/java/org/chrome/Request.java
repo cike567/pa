@@ -32,7 +32,7 @@ public class Request {
 	}
 
 	public Request(String method, Map<String, Object> params) {
-		this.method = method;
+		this(method);
 		this.params = params;
 	}
 
