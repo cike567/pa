@@ -12,6 +12,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 public class Files {
 
 	public static File create(String fileName) throws IOException {
@@ -59,6 +64,6 @@ public class Files {
 		return classLoader.getResourceAsStream(fileName);
 	}
 
-	public static final Logger log = LoggerFactory.getLogger(Files.class);
+	private static final Logger log = LoggerFactory.getLogger(Files.class);
 
 }

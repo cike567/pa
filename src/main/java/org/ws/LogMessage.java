@@ -3,6 +3,11 @@ package org.ws;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 public class LogMessage implements Message {
 	protected String result;
 

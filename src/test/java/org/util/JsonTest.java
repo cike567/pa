@@ -8,7 +8,9 @@ import org.util.html.Json;
 import org.util.io.Files;
 
 /**
- * Unit test for simple App.
+ * 
+ * @author cike
+ *
  */
 public class JsonTest {
 

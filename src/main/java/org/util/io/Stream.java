@@ -6,6 +6,11 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 public class Stream {
 
 	public static String read(InputStream inputStream) {
@@ -17,6 +22,6 @@ public class Stream {
 		return scanner.useDelimiter("\\A").next();
 	}
 
-	public static final Logger log = LoggerFactory.getLogger(Stream.class);
+	private static final Logger log = LoggerFactory.getLogger(Stream.class);
 
 }

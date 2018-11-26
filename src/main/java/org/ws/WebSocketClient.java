@@ -18,6 +18,11 @@ import org.slf4j.LoggerFactory;
 
 import lombok.Setter;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 @ClientEndpoint
 @Setter
 public class WebSocketClient {

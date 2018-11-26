@@ -7,7 +7,9 @@ import org.junit.Test;
 import org.util.io.Files;
 
 /**
- * Unit test for simple App.
+ * 
+ * @author cike
+ *
  */
 public class FileTest {
 

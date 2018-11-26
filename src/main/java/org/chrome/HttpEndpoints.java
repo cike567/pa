@@ -4,10 +4,29 @@ import java.io.IOException;
 
 import org.util.html.Http;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 public enum HttpEndpoints {
-	VERSION("/json/version"), LIST("/json"), PROTOCOL("/json/protocol/"), NEW("/json/new?"), // {url}
-	ACTIVATE("/json/activate/"), // {targetId}
-	CLOSE("/json/close/");// {targetId}
+	//
+	VERSION("/json/version"),
+
+	//
+	LIST("/json"),
+
+	//
+	PROTOCOL("/json/protocol/"),
+
+	// {url}
+	NEW("/json/new?"),
+
+	// {targetId}
+	ACTIVATE("/json/activate/"),
+
+	// {targetId}
+	CLOSE("/json/close/");
 
 	String path;
 

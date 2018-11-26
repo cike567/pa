@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.util.html.Json;
 
 /**
- * Unit test for simple App.
+ * 
+ * @author cike
+ *
  */
 public class HttpEndpointsTest {
 

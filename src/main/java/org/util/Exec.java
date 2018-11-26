@@ -2,6 +2,11 @@ package org.util;
 
 import java.io.IOException;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 public class Exec {
 
 	public static void run(String exe) throws IOException {

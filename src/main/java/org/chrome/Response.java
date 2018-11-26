@@ -11,6 +11,11 @@ import org.ws.Message;
 
 import lombok.Setter;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 @Setter
 public class Response implements Message {
 
@@ -26,10 +31,11 @@ public class Response implements Message {
 		}
 	}
 
-	// TODO
 	protected void handle(Json json) {
+		// TODO
 	}
 
+	@Override
 	public String result() throws InterruptedException {
 		latch.await();
 		return result;
@@ -42,9 +48,9 @@ public class Response implements Message {
 
 	protected String result;
 
-	protected String ID = "id";
+	protected final String ID = "id";
 
-	protected Integer id; // protected List<Integer> id;
+	protected Integer id;
 
 	protected CountDownLatch latch;
 

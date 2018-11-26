@@ -7,20 +7,22 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.chrome.Devtools;
 import org.chrome.Domains;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.util.Strings;
 import org.util.io.Stream;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 public class Http {
 
 	public static String curl(String url) throws IOException, InterruptedException {
-		Devtools client = new Devtools(9222);
-		Domains d = new Domains(client);
+		Domains d = new Domains();
 		d.navigate(url);
-
 		String html = d.document();
 		// File file = Files.write(html, "html");
 		return html;
@@ -43,7 +45,7 @@ public class Http {
 	public static Map<String, String> args(String url) {
 		String fix = "?";
 		String temp = new Strings(url).sub(fix).value();
-		Map<String, String> args = new HashMap<String, String>();
+		Map<String, String> args = new HashMap<String, String>(10);
 		String[] arg = temp.split("&");
 		for (String t : arg) {
 			String[] val = t.split("=");

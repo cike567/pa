@@ -11,6 +11,11 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 public class Json {
 
 	public static String toString(Object object) {
@@ -21,9 +26,9 @@ public class Json {
 
 	public Json select(String[] keys) {
 
-		if (temp.startsWith("{")) {
+		if (temp.startsWith(O)) {
 			object = new JSONObject(temp);
-		} else if (temp.startsWith("[")) {
+		} else if (temp.startsWith(A)) {
 			array = new JSONArray(temp);
 		}
 
@@ -194,7 +199,7 @@ public class Json {
 
 	public JSONArray array() {
 		if (array == null) {
-			if (temp.startsWith("[")) {
+			if (temp.startsWith(A)) {
 				array = new JSONArray(temp);
 			} else {
 				array = new JSONArray();
@@ -205,7 +210,7 @@ public class Json {
 
 	public JSONObject object() {
 		if (object == null) {
-			if (temp.startsWith("{")) {
+			if (temp.startsWith(O)) {
 				object = new JSONObject(temp);
 			} else {
 				object = (JSONObject) array().get(0);
@@ -223,7 +228,10 @@ public class Json {
 	private String temp;
 	private JSONArray array;
 	private JSONObject object;
-	public final Logger log = LoggerFactory.getLogger(Json.class);
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+	private final String O = "{";
+	private final String A = "[";
 
 	private final Map<Character, Character> VALUE = new HashMap<Character, Character>() {
 		{

@@ -7,6 +7,11 @@ import org.util.html.Json;
 
 import lombok.Data;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 @Data
 public class Request {
 
@@ -15,13 +20,14 @@ public class Request {
 	private int id;
 
 	public void setParams(String k, Object v) {
-		params = new HashMap<String, Object>() {
+		params = new HashMap<String, Object>(1) {
 			{
 				put(k, v);
 			}
 		};
 	}
 
+	@Override
 	public String toString() {
 		return Json.toString(this);
 	}

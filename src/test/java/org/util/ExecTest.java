@@ -3,10 +3,11 @@ package org.util;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.util.Exec;
 
 /**
- * Unit test for simple App.
+ * 
+ * @author cike
+ *
  */
 public class ExecTest {
 

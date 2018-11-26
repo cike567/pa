@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.ws.WebSocketClient;
 
 /**
- * Unit test for simple App.
+ * 
+ * @author cike
+ *
  */
 public class WSTest {
 
@@ -29,8 +31,9 @@ public class WSTest {
 		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
 			String line = r.readLine();
-			if (line.equals("quit"))
+			if ("quit".equals(line)) {
 				break;
+			}
 			client.send(line);
 		}
 	}
@@ -40,15 +43,16 @@ public class WSTest {
 		// Exec.kill("chrome");
 		String url = "https://www.baidu.com/";
 		url = "https://s.taobao.com/";
-		Devtools client = new Devtools(9222);
+		Devtools client = Devtools.chrome();
 		Request request = new Request("Page.enable");
 		client.send(request);
 
 		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
 			String line = r.readLine();
-			if (line.equals("quit"))
+			if ("quit".equals(line)) {
 				break;
+			}
 			client.send(line);
 		}
 
@@ -58,18 +62,11 @@ public class WSTest {
 	public void testDomains() throws IOException, InterruptedException {
 		// Exec.kill("chrome");
 		String url = "https://www.baidu.com/";
-
-		Devtools client = new Devtools(9222);
-		Domains d = new Domains(client);
+		Domains d = new Domains();
 		d.navigate(url);
-
 		String html = d.document();
 		System.out.print(html);
 	}
-
-	private String NODE_ID = "nodeId";
-
-	private String OBJECT_ID = "objectId";
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

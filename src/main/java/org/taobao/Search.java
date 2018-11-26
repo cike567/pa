@@ -9,14 +9,12 @@ import org.util.html.Http;
 import org.util.html.Json;
 import org.util.io.Files;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 public class Search {
-
-	/*
-	 * public static File searchJson(String url, String[] keys) throws IOException {
-	 * String html = ChromeDevTools.html(url); Json json = new Json(html); String
-	 * content = json.sub("g_page_config").select(keys).array().toString(); File
-	 * file = Files.write(content, "json"); return file; }
-	 */
 
 	public static String samestyle(String q) throws IOException, InterruptedException {
 		String[] keys = { "mods", "itemlist", "data", "auctions", "i2iTags", "samestyle", "url" };

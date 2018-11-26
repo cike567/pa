@@ -3,6 +3,9 @@ package org.chrome;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -11,28 +14,51 @@ import org.util.Exec;
 import org.util.html.Json;
 import org.ws.WebSocketClient;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 public class Devtools {
 
-	public Devtools(int port) {
+	private static Devtools chrome = new Devtools(9222);
+
+	public static Devtools chrome() {
+		return chrome;
+	}
+
+	private Devtools(int port) {
 		String exe = String.format(CHROME_HEADLESS, port);
 		try {
 			Exec.run(exe);
 			String version = get(HttpEndpoints.LIST);
 			String uri = new Json(version).object().getString(URL);
 			client = new WebSocketClient(uri);
-			new Thread(() -> {
-				while (true) {
-					try {
-						Request r = requests.take();
-						send(r.toString());
-					} catch (IOException | InterruptedException e) {
-						log.error(e.getMessage());
-					}
-				}
-			}).start();
+			run();
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	private void run() {
+		ThreadFactory factory = new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				return new Thread(r, "sendRequest");
+			}
+		};
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+				new LinkedBlockingQueue<Runnable>(), factory);
+		executor.execute(() -> {
+			while (true) {
+				try {
+					Request r = requests.take();
+					send(r.toString());
+				} catch (IOException | InterruptedException e) {
+					log.error(e.getMessage());
+				}
+			}
+		});
 	}
 
 	public String get(HttpEndpoints endpoints, String... args) throws IOException {
@@ -66,12 +92,12 @@ public class Devtools {
 
 	private BlockingQueue<Request> requests = new LinkedBlockingQueue<Request>();
 
-	private String CHROME_HEADLESS = "chrome.exe --remote-debugging-port=%s --headless";
+	private final String CHROME_HEADLESS = "chrome.exe --remote-debugging-port=%s --headless";
 
-	private String URL = "webSocketDebuggerUrl";
+	private final String URL = "webSocketDebuggerUrl";
 
 	private WebSocketClient client;
 
-	public final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 }

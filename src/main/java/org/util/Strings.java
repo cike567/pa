@@ -2,6 +2,11 @@ package org.util;
 
 import lombok.AllArgsConstructor;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 @AllArgsConstructor
 public class Strings {
 
@@ -27,6 +32,6 @@ public class Strings {
 		return temp;
 	}
 
-	String temp;
+	private String temp;
 
 }

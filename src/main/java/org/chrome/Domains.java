@@ -8,21 +8,26 @@ import org.chrome.request.Document;
 
 import lombok.Data;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 @Data
 public class Domains {
 
 	public String send(Request request) throws IOException, InterruptedException {
-		return client.send(request);
+		return Devtools.chrome().send(request);
 	}
 
 	public void navigate(String url) throws IOException, InterruptedException {
 		Request navigate = new Request("Page.navigate");
 		navigate.setParams("url", url);
-		client.send(navigate);
+		Devtools.chrome().send(navigate);
 	}
 
 	public String document() throws IOException, InterruptedException {
-		return new Document().html(client);
+		return new Document().html();
 	}
 
 	/*
@@ -35,13 +40,7 @@ public class Domains {
 	 * private Request request; private Message response;
 	 */
 
-	public Domains(Devtools client) {
-		this.client = client;
-	}
-
-	private Devtools client;
-
-	public static Map<String, String[]> METHOD = new HashMap<String, String[]>() {
+	public final static Map<String, String[]> METHOD = new HashMap<String, String[]>() {
 		{
 			put("Page.navigate", new String[] { "url" });
 		}

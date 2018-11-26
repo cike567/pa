@@ -13,10 +13,16 @@ import org.util.html.Json;
 
 import lombok.Getter;
 
+/**
+ * 
+ * @author cike
+ *
+ */
 @Getter
 public class Document {
 
-	public String html(Devtools client) throws IOException, InterruptedException {
+	public String html() throws IOException, InterruptedException {
+		Devtools client = Devtools.chrome();
 		String rs = client.send(getDocument());
 		rs = client.send(resolveNode(rs));
 		rs = client.send(callFunctionOn(rs));
@@ -24,11 +30,11 @@ public class Document {
 		return html;
 	}
 
-	public Request getDocument() {
+	private Request getDocument() {
 		return new Request("DOM.getDocument");
 	}
 
-	public Request resolveNode(String message) throws IOException, InterruptedException {
+	private Request resolveNode(String message) throws IOException, InterruptedException {
 		Request resolveNode = new Request("DOM.resolveNode");
 		Json json = new Json(message);
 		int nodeId = Integer.parseInt(json.select(new String[] { "result", "root" }).object().get(NODE_ID).toString());
@@ -36,18 +42,18 @@ public class Document {
 		return resolveNode;
 	}
 
-	public Request callFunctionOn(String message) throws IOException, InterruptedException {
+	private Request callFunctionOn(String message) throws IOException, InterruptedException {
 		Json json = new Json(message);
 		Request callFunctionOn = new Request("Runtime.callFunctionOn");
 		String objectId = json.select(new String[] { "result", "object" }).object().getString(OBJECT_ID);
 
-		Map<String, Object> arguments = new HashMap() {
+		Map<String, Object> arguments = new HashMap(1) {
 			{
 				put("value", "documentElement.outerHTML");
 			}
 		};
 
-		Map<String, Object> params = new HashMap<String, Object>() {
+		Map<String, Object> params = new HashMap<String, Object>(8) {
 			{
 				put("returnByValue", true);
 				put("silent", false);
@@ -65,10 +71,10 @@ public class Document {
 		return callFunctionOn;
 	}
 
-	private String NODE_ID = "nodeId";
+	private final String NODE_ID = "nodeId";
 
-	private String OBJECT_ID = "objectId";
+	private final String OBJECT_ID = "objectId";
 
-	public final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 }
