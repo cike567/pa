@@ -2,6 +2,7 @@ package org.chrome;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -21,28 +22,26 @@ public class Response implements Message {
 
 	@Override
 	public void handle(String message) throws IOException {
-		result = message;
+
 		Json json = new Json(message);
 		JSONObject response = json.object();
 		log.info("{}", response);
+		Devtools.protocol(targetId).result(message);
 		if (response.has(ID) && response.get(ID).equals(id)) {
-			handle(json);
+			result = message;
 			latch.countDown();
 		}
 	}
 
-	protected void handle(Json json) {
-		// TODO
-	}
-
 	@Override
 	public String result() throws InterruptedException {
-		latch.await();
+		latch.await(5, TimeUnit.SECONDS);
 		return result;
 	}
 
-	public Response(int id) {
+	public Response(int id, String targetId) {
 		this.id = id;
+		this.targetId = targetId;
 		latch = new CountDownLatch(1);
 	}
 
@@ -51,6 +50,8 @@ public class Response implements Message {
 	protected final String ID = "id";
 
 	protected Integer id;
+
+	protected String targetId;
 
 	protected CountDownLatch latch;
 

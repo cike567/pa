@@ -48,6 +48,7 @@ public class Files {
 	}
 
 	public static void write(String txt, File file) throws IOException {
+		log.info(file.getAbsolutePath());
 		RandomAccessFile rf = new RandomAccessFile(file, "rw");
 		rf.write(txt.getBytes());
 		rf.close();

@@ -7,7 +7,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.chrome.Domains;
+import org.chrome.Devtools;
+import org.chrome.Protocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.util.Strings;
@@ -21,9 +22,9 @@ import org.util.io.Stream;
 public class Http {
 
 	public static String curl(String url) throws IOException, InterruptedException {
-		Domains d = new Domains();
-		d.navigate(url);
-		String html = d.document();
+		Protocol client = Devtools.protocol();
+		client.navigate(url);
+		String html = client.document();
 		// File file = Files.write(html, "html");
 		return html;
 	}

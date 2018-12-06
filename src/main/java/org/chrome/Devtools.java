@@ -1,64 +1,60 @@
 package org.chrome;
 
 import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.util.Exec;
 import org.util.html.Json;
-import org.ws.WebSocketClient;
+
+import lombok.Getter;
 
 /**
  * 
  * @author cike
  *
  */
+@Getter
 public class Devtools {
 
 	private static Devtools chrome = new Devtools(9222);
 
-	public static Devtools chrome() {
-		return chrome;
-	}
-
 	private Devtools(int port) {
-		String exe = String.format(CHROME_HEADLESS, port);
-		try {
-			Exec.run(exe);
-			String version = get(HttpEndpoints.LIST);
-			String uri = new Json(version).object().getString(URL);
-			client = new WebSocketClient(uri);
-			run();
-		} catch (IOException e) {
-			log.error(e.getMessage());
-		}
-	}
-
-	private void run() {
 		ThreadFactory factory = new ThreadFactory() {
+
 			@Override
 			public Thread newThread(Runnable r) {
 				return new Thread(r, "sendRequest");
 			}
 		};
-		ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>(), factory);
-		executor.execute(() -> {
-			while (true) {
-				try {
-					Request r = requests.take();
-					send(r.toString());
-				} catch (IOException | InterruptedException e) {
-					log.error(e.getMessage());
-				}
-			}
-		});
+		executor = new ThreadPoolExecutor(0, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(),
+				factory);
+		String exe = String.format(CHROME_HEADLESS, port);
+		try {
+			Exec.run(exe);
+			String version = get(HttpEndpoints.LIST);
+			execute(version);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+	}
+
+	public Protocol execute(String rs) throws IOException {
+		JSONObject object = new Json(rs).object();
+		String uri = object.getString(URL);
+		String id = object.getString("id");
+		Protocol p = new Protocol(uri, id);
+		protocol.put(id, p);
+		executor.execute(p);
+		return p;
 	}
 
 	public String get(HttpEndpoints endpoints, String... args) throws IOException {
@@ -68,20 +64,22 @@ public class Devtools {
 		return endpoints.get(args[0]);
 	}
 
-	public void send(String text) throws IOException {
-		client.send(text);
+	public static Devtools chrome() {
+		return chrome;
 	}
 
-	public String send(Request request) throws IOException, InterruptedException {
-		Integer id = request.getId();
-		if (id == null || id == 0) {
-			id = id();
-			request.setId(id);
-		}
-		Response response = new Response(id);
-		requests.add(request);
-		client.setMessage(response);
-		return response.result();
+	public static Protocol protocol() {
+		return chrome.protocol.values().iterator().next();
+	}
+
+	public static Protocol protocol(String id) {
+		return chrome.protocol.get(id);
+	}
+
+	// TODO
+	public static Protocol open(String url) throws IOException {
+		String rs = chrome.get(HttpEndpoints.NEW, url);
+		return chrome.execute(rs);
 	}
 
 	public static Integer id() {
@@ -90,13 +88,13 @@ public class Devtools {
 
 	private static AtomicInteger id = new AtomicInteger(0);
 
-	private BlockingQueue<Request> requests = new LinkedBlockingQueue<Request>();
+	private static ThreadPoolExecutor executor;
+
+	private Map<String, Protocol> protocol = new ConcurrentHashMap<>();
 
 	private final String CHROME_HEADLESS = "chrome.exe --remote-debugging-port=%s --headless";
 
 	private final String URL = "webSocketDebuggerUrl";
-
-	private WebSocketClient client;
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

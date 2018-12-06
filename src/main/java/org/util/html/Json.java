@@ -33,7 +33,7 @@ public class Json {
 		}
 
 		for (String key : keys) {
-			if (object != null) {
+			if (object != null && object.has(key)) {
 				Object value = object.get(key);
 				if (value instanceof JSONObject) {
 					object = (JSONObject) value;
@@ -197,6 +197,22 @@ public class Json {
 
 	/// value
 
+	public Object value(String[] keys) {
+		Object rs = null;
+		if (object != null) {
+			JSONObject value = object;
+			for (String key : keys) {// for(int i=0;i<keys.length;i++)
+				if (value.has(key)) {
+					rs = value.get(key);
+					if (rs instanceof JSONObject) {
+						value = (JSONObject) rs;
+					}
+				}
+			}
+		}
+		return rs;
+	}
+
 	public JSONArray array() {
 		if (array == null) {
 			if (temp.startsWith(A)) {
@@ -212,7 +228,7 @@ public class Json {
 		if (object == null) {
 			if (temp.startsWith(O)) {
 				object = new JSONObject(temp);
-			} else {
+			} else if (temp.startsWith(A)) {
 				object = (JSONObject) array().get(0);
 			}
 		}
@@ -220,7 +236,7 @@ public class Json {
 	}
 
 	public Json(String temp) {
-		this.temp = temp;
+		this.temp = temp == null ? "" : temp;
 		String[] keys = {};
 		select(keys);
 	}
