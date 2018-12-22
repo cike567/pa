@@ -1,4 +1,4 @@
-package org.ws;
+package org.util.ws;
 
 import java.io.IOException;
 import java.net.URI;
@@ -60,6 +60,7 @@ public class WebSocketClient {
 
 	@OnMessage
 	public void onMessage(String msg) throws IOException {
+		log.info(msg);
 		message.handle(msg);
 	}
 

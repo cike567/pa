@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.util.html.Http;
 
 /**
  * 
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class Stream {
 
 	public static String read(InputStream inputStream) {
-		return read(inputStream, "UTF-8");
+		return read(inputStream, Http.UTF8);
 	}
 
 	public static String read(InputStream inputStream, String charset) {

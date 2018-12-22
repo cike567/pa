@@ -72,7 +72,6 @@ public class Json {
 					list.put(sub.get(j));
 				}
 			}
-
 		}
 		return list;
 	}

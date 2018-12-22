@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,7 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.util.Exec;
+import org.util.CMD;
+import org.util.html.Http;
 import org.util.html.Json;
 
 import lombok.Getter;
@@ -25,29 +25,18 @@ import lombok.Getter;
 @Getter
 public class Devtools {
 
-	private static Devtools chrome = new Devtools(9222);
-
 	private Devtools(int port) {
-		ThreadFactory factory = new ThreadFactory() {
-
-			@Override
-			public Thread newThread(Runnable r) {
-				return new Thread(r, "sendRequest");
-			}
-		};
-		executor = new ThreadPoolExecutor(0, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(),
-				factory);
 		String exe = String.format(CHROME_HEADLESS, port);
 		try {
-			Exec.run(exe);
-			String version = get(HttpEndpoints.LIST);
+			CMD.exec(exe);
+			String version = get(Endpoint.LIST);
 			execute(version);
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
 	}
 
-	public Protocol execute(String rs) throws IOException {
+	private Protocol execute(String rs) throws IOException {
 		JSONObject object = new Json(rs).object();
 		String uri = object.getString(URL);
 		String id = object.getString("id");
@@ -57,14 +46,16 @@ public class Devtools {
 		return p;
 	}
 
-	public String get(HttpEndpoints endpoints, String... args) throws IOException {
-		if (args.length == 0) {
-			args = new String[] { "" };
-		}
-		return endpoints.get(args[0]);
+	private String get(Endpoint endpoints, String... args) throws IOException {
+		return Http.get(endpoints, PORT, args);
 	}
 
-	public static Devtools chrome() {
+	private static Devtools chrome() {
+		return chrome;
+	}
+
+	public static Devtools chrome(int port) {
+		chrome = new Devtools(port);
 		return chrome;
 	}
 
@@ -78,7 +69,7 @@ public class Devtools {
 
 	// TODO
 	public static Protocol open(String url) throws IOException {
-		String rs = chrome.get(HttpEndpoints.NEW, url);
+		String rs = chrome.get(Endpoint.NEW, url);
 		return chrome.execute(rs);
 	}
 
@@ -86,15 +77,20 @@ public class Devtools {
 		return id.incrementAndGet();
 	}
 
-	private static AtomicInteger id = new AtomicInteger(0);
-
-	private static ThreadPoolExecutor executor;
-
-	private Map<String, Protocol> protocol = new ConcurrentHashMap<>();
-
 	private final String CHROME_HEADLESS = "chrome.exe --remote-debugging-port=%s --headless";
 
 	private final String URL = "webSocketDebuggerUrl";
+
+	private static int PORT = 9222;
+
+	private static Devtools chrome = new Devtools(PORT);
+
+	private static AtomicInteger id = new AtomicInteger(0);
+
+	private Map<String, Protocol> protocol = new ConcurrentHashMap<>();
+
+	private static ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 10, 1L, TimeUnit.MINUTES,
+			new LinkedBlockingQueue<Runnable>());
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

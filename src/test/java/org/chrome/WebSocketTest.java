@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ws.WebSocketClient;
+import org.util.ws.WebSocketClient;
 
 /**
  * 

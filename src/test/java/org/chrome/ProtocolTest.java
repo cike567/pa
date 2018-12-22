@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,14 +15,15 @@ import org.slf4j.LoggerFactory;
  */
 public class ProtocolTest {
 
-	// @Test
+	@Test
 	public void testRequest() throws IOException, InterruptedException {
 		// Exec.kill("chrome");
 		String url = "https://www.baidu.com/";
 		url = "https://s.taobao.com/";
 		Protocol client = Devtools.protocol();
 		Request request = new Request("Page.enable");
-		client.send(request);
+		String rs = client.send(request);
+		System.out.println(rs);
 
 		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {

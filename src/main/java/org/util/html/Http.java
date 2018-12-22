@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.chrome.Devtools;
+import org.chrome.Endpoint;
 import org.chrome.Protocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class Http {
 	}
 
 	public static String get(String http) throws IOException {
-		return get(http, "GBK");
+		return get(http, GBK);
 	}
 
 	public static String get(String http, String charset) throws IOException {
@@ -41,6 +42,11 @@ public class Http {
 		rs = Stream.read(in, charset);
 		in.close();
 		return rs;
+	}
+
+	public static String get(Endpoint endpoint, int port, String... query) throws IOException {
+		String http = String.format("http://localhost:%d%s", port, endpoint.path(query));
+		return get(http, UTF8);
 	}
 
 	public static Map<String, String> args(String url) {
@@ -54,6 +60,10 @@ public class Http {
 		}
 		return args;
 	}
+
+	public final static String GBK = "GBK";
+
+	public final static String UTF8 = "UTF-8";
 
 	public static final Logger logger = LoggerFactory.getLogger(Http.class);
 

@@ -7,7 +7,6 @@ import java.util.List;
 import org.chrome.Domains;
 import org.chrome.Protocol;
 import org.chrome.Request;
-import org.chrome.enums.Method;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,18 +34,18 @@ public class Xhr {
 	public Xhr(JSONObject rs) {
 		this.url = rs.getString(Domains.URL);
 		this.method = rs.getString(Domains.METHOD);
-		if (Method.POST.name().equals(this.method)) {
-			this.body = rs.getString("postData");
-		}
+		// if (Method.POST.name().equals(this.method)) {
+		this.body = rs.getString(DATA);
+		// }
 
 	}
 
 	public static List<Xhr> all(Protocol client) throws IOException, InterruptedException {
-		Request network = new Request("Network.enable");
+		Request network = new Request(Domains.ENABLE_NETWORK);
 		Integer id = network.getId();
 		client.send(network);
-		Request reload = new Request("Page.reload");
-		reload.setParams("ignoreCache", true);
+		Request reload = new Request(Domains.RELOAD_PAGE);
+		reload.setParams(IGNORE_CACHE, true);
 		client.send(reload);
 		List<Xhr> xhrs = xhr(client, id);
 		return xhrs;
@@ -58,7 +57,7 @@ public class Xhr {
 		String[] mKey = { Domains.METHOD };
 		String[] tKey = { Domains.PARAMS, Domains.TYPE };
 		String[] pKey = { Domains.PARAMS, Domains.REQUEST };
-		String[] xKey = { Domains.PARAMS, Domains.REQUEST, Domains.HEADERS, "X-Requested-With" };
+		String[] xKey = { Domains.PARAMS, Domains.REQUEST, Domains.HEADERS, REQUESTED };
 		String[] rKey = { Domains.PARAMS, Domains.REQUEST_ID };
 		String[] bKey = { Domains.RESULT, Domains.BODY };
 		String[] cKey = { Domains.ERROR, Domains.CODE };
@@ -68,7 +67,7 @@ public class Xhr {
 			if (id.equals(rs.value(iKey))) {
 				break;
 			}
-			if (REQUEST_WILLBESENT.equals(rs.value(mKey)) && Domains.XHR.equals(rs.value(tKey))
+			if (Domains.REQUEST_WILLBESENT.equals(rs.value(mKey)) && Domains.XHR.equals(rs.value(tKey))
 					&& XHR.equals(rs.value(xKey))) {
 				Request request = response(rs.value(rKey).toString());
 				JSONObject params = rs.select(pKey).object();
@@ -86,14 +85,16 @@ public class Xhr {
 	}
 
 	private static Request response(String requestId) {
-		Request request = new Request(GET_RESPONSE_BODY);
+		Request request = new Request(Domains.GET_RESPONSE_BODY);
 		request.setParams(Domains.REQUEST_ID, requestId);
 		return request;
 	}
 
-	private final static String REQUEST_WILLBESENT = "Network.requestWillBeSent";
+	private final String DATA = "postData";
 
-	private final static String GET_RESPONSE_BODY = "Network.getResponseBody";
+	private final static String IGNORE_CACHE = "ignoreCache";
+
+	private final static String REQUESTED = "X-Requested-With";
 
 	private final static String XHR = "XMLHttpRequest";
 

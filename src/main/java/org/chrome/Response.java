@@ -2,13 +2,12 @@ package org.chrome;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.util.html.Json;
-import org.ws.Message;
+import org.util.ws.Message;
 
 import lombok.Setter;
 
@@ -25,7 +24,8 @@ public class Response implements Message {
 
 		Json json = new Json(message);
 		JSONObject response = json.object();
-		log.info("{}", response);
+		log.info("handld {}", response);
+		// TODO
 		Devtools.protocol(targetId).result(message);
 		if (response.has(ID) && response.get(ID).equals(id)) {
 			result = message;
@@ -35,7 +35,7 @@ public class Response implements Message {
 
 	@Override
 	public String result() throws InterruptedException {
-		latch.await(5, TimeUnit.SECONDS);
+		latch.await();// 5, TimeUnit.SECONDS
 		return result;
 	}
 

@@ -20,11 +20,9 @@ public class DevtoolsTest {
 		// Exec.kill("chrome");
 		String[] url = { "https://www.baidu.com/", "https://s.taobao.com/search",
 				"http://www.96900.com.cn/views/Home/index.html" };
-		Devtools chrome = Devtools.chrome();
 		Arrays.asList(url).forEach((v) -> {
-
 			try {
-				Protocol client = chrome.protocol();// chrome.open(v);//
+				Protocol client = Devtools.protocol();// chrome.open(v);//
 				// client.navigate(v);
 				String html = client.document();
 				Files.write(html, "html");
@@ -32,7 +30,6 @@ public class DevtoolsTest {
 			} catch (IOException | InterruptedException e) {
 				log.debug(e.getMessage());
 			}
-
 		});
 
 	}

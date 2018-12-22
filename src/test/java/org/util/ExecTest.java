@@ -14,7 +14,7 @@ public class ExecTest {
 	@Test
 	public void testRun() throws IOException {
 		// Exec.kill("chrome");
-		Exec.run("chrome.exe --remote-debugging-port=9222 --headless");
+		CMD.exec("chrome.exe --remote-debugging-port=9222 --headless");
 	}
 
 }

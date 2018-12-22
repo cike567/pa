@@ -1,4 +1,4 @@
-package org.ws;
+package org.util.ws;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

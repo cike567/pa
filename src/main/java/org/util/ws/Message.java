@@ -1,4 +1,4 @@
-package org.ws;
+package org.util.ws;
 
 import java.io.IOException;
 

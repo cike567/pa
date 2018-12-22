@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.chrome.Protocol;
 import org.chrome.Request;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.util.html.Json;
@@ -23,7 +22,6 @@ import lombok.Getter;
 public class Document {
 
 	public String html(Protocol client) throws IOException, InterruptedException {
-		// Protocol client = Devtools.chrome().getProtocol();
 		String rs = "";
 		do {
 			rs = client.send(getDocument());
@@ -32,25 +30,6 @@ public class Document {
 		rs = client.send(callFunctionOn(rs));
 		String html = new Json(rs).select(new String[] { "result", "result" }).object().get("value").toString();
 		return html;
-	}
-
-	// TODO
-	int nodeId(Protocol client) {
-		boolean flag = true;
-		int nodeId = 0;
-		while (flag) {
-			String rs = client.result();
-			log.info("nodeId#{}", rs);
-			JSONObject json = new Json(rs).object();
-			if (json.has("params")) {
-				json = (JSONObject) json.get("params");
-				if (json.has("nodeId")) {
-					nodeId = json.getInt("nodeId");
-					flag = false;
-				}
-			}
-		}
-		return nodeId;
 	}
 
 	private Request getDocument() {
