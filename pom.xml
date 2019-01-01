@@ -81,7 +81,7 @@
 						<manifest>
 							<mainClass>${project.groupId}.${project.artifactId}.App</mainClass>
 							<addClasspath>true</addClasspath>
-							<classpathPrefix>./lib/</classpathPrefix>
+							<classpathPrefix>lib</classpathPrefix>
 						</manifest>
 					</archive>
 					<descriptors>

@@ -1,8 +1,6 @@
 package org.chrome;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -24,16 +22,11 @@ public class ProtocolTest {
 		Request request = new Request("Page.enable");
 		String rs = client.send(request);
 		System.out.println(rs);
-
-		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
-		while (true) {
-			String line = r.readLine();
-			if ("quit".equals(line)) {
-				break;
-			}
-			client.send(line);
-		}
-
+		/*
+		 * BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+		 * while (true) { String line = r.readLine(); if ("quit".equals(line)) { break;
+		 * } client.send(line); }
+		 */
 	}
 
 	// @Test

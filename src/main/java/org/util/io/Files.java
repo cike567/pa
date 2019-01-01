@@ -9,9 +9,6 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 
  * @author cike
@@ -21,11 +18,16 @@ public class Files {
 
 	public static File create(String fileName) throws IOException {
 		File file = new File(fileName);
-		if (!file.getParentFile().exists()) {
+		if (file.exists()) {
+			return file;
+		}
+		if (file.getParentFile() != null && !file.getParentFile().exists()) {
 			file.getParentFile().mkdirs();
 		}
-		file.createNewFile();
-		log.info(file.getAbsolutePath());
+		if (file.isFile()) {
+			file.createNewFile();
+		}
+
 		return file;
 	}
 
@@ -48,7 +50,6 @@ public class Files {
 	}
 
 	public static void write(String txt, File file) throws IOException {
-		log.info(file.getAbsolutePath());
 		RandomAccessFile rf = new RandomAccessFile(file, "rw");
 		rf.write(txt.getBytes());
 		rf.close();
@@ -64,7 +65,5 @@ public class Files {
 		ClassLoader classLoader = Files.class.getClassLoader();
 		return classLoader.getResourceAsStream(fileName);
 	}
-
-	private static final Logger log = LoggerFactory.getLogger(Files.class);
 
 }

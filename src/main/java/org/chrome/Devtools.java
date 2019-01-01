@@ -25,6 +25,9 @@ import lombok.Getter;
 @Getter
 public class Devtools {
 
+	private static ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 10, 1L, TimeUnit.MINUTES,
+			new LinkedBlockingQueue<Runnable>());
+
 	private Devtools(int port) {
 		String exe = String.format(CHROME_HEADLESS, port);
 		try {
@@ -88,9 +91,6 @@ public class Devtools {
 	private static AtomicInteger id = new AtomicInteger(0);
 
 	private Map<String, Protocol> protocol = new ConcurrentHashMap<>();
-
-	private static ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 10, 1L, TimeUnit.MINUTES,
-			new LinkedBlockingQueue<Runnable>());
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
