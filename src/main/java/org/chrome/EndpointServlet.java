@@ -3,6 +3,7 @@ package org.chrome;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -31,7 +32,11 @@ public class EndpointServlet extends HttpServlet {
 	private Request request(HttpServletRequest request) throws UnsupportedEncodingException {
 		JSONObject json = new Json(URLDecoder.decode(request.getQueryString(), Http.UTF8)).object();
 		String method = json.getString(Domains.METHOD);
-		Map<String, Object> params = json.getJSONObject(Domains.PARAMS).toMap();
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (json.has(Domains.PARAMS)) {
+			params = json.getJSONObject(Domains.PARAMS).toMap();
+		}
+
 		return new Request(method, params);
 	}
 
