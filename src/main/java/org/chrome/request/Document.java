@@ -9,7 +9,7 @@ import org.chrome.Protocol;
 import org.chrome.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.util.html.Json;
+import org.util.Json;
 
 import lombok.Getter;
 

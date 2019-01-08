@@ -6,7 +6,7 @@ import java.util.concurrent.CountDownLatch;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.util.html.Json;
+import org.util.Json;
 import org.util.ws.Message;
 
 import lombok.Setter;
@@ -27,7 +27,7 @@ public class Response implements Message {
 		log.info("handld {}", response);
 		// TODO
 		Devtools.protocol(targetId).result(message);
-		if (response.has(ID) && response.get(ID).equals(id)) {
+		if (response.has(Domains.ID) && response.get(Domains.ID).equals(id)) {
 			result = message;
 			latch.countDown();
 		}
@@ -46,8 +46,6 @@ public class Response implements Message {
 	}
 
 	protected String result;
-
-	protected final String ID = "id";
 
 	protected Integer id;
 

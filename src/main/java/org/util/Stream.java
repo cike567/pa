@@ -1,18 +1,15 @@
-package org.util.io;
+package org.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import org.util.html.Http;
 
 /**
  * 
@@ -41,32 +38,26 @@ public class Stream {
 		return lines;
 	}
 
-	public static void save(InputStream is, File temp) {
-		System.out.println(temp.getAbsolutePath());
-		BufferedInputStream bis = null;
-		BufferedOutputStream bos = null;
-		try {
-			bis = new BufferedInputStream(is);
-			bos = new BufferedOutputStream(new FileOutputStream(temp)); // 把文件流转为文件，保存在临时目录
-			int len = 0;
-			byte[] buf = new byte[10 * 1024]; // 缓冲区
-			while ((len = bis.read(buf)) != -1) {
-				bos.write(buf, 0, len);
-			}
-			bos.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (bos != null)
-					bos.close();
-				if (bis != null)
-					bis.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	public static void write(InputStream input, File file) throws IOException {
+		RandomAccessFile rf = new RandomAccessFile(file, "rw");
+		rf.write(toByte(input));
+		input.close();
+		rf.close();
 	}
+
+	public static byte[] toByte(InputStream input) throws IOException {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		byte[] buffer = new byte[BUF];
+		int n = 0;
+		while (-1 != (n = input.read(buffer))) {
+			output.write(buffer, 0, n);
+		}
+		buffer = output.toByteArray();
+		output.close();
+		return buffer;
+	}
+
+	private static final int BUF = 1024 * 8;
 
 	// private static final Logger log = LoggerFactory.getLogger(Stream.class);
 

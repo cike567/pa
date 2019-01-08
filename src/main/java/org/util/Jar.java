@@ -6,9 +6,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
 
-import org.util.io.Files;
-import org.util.io.Stream;
-
 public class Jar {
 
 	public URL[] classpath() throws IOException {
@@ -45,7 +42,7 @@ public class Jar {
 			if (!file.exists()) {
 				Files.create(names[i]);
 			}
-			Stream.save(url.openStream(), file);
+			Stream.write(url.openStream(), file);
 			urls[i] = file.toURL();
 		}
 

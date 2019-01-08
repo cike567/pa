@@ -1,4 +1,4 @@
-package org.util.html;
+package org.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +12,6 @@ import org.chrome.Endpoint;
 import org.chrome.Protocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.util.Strings;
-import org.util.io.Stream;
 
 /**
  * 

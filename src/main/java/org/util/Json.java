@@ -1,4 +1,4 @@
-package org.util.html;
+package org.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -48,12 +48,4 @@ public class Domains {
 
 	public static final String XHR = "XHR";
 
-	public final static String RELOAD_PAGE = "Page.reload";
-
-	public final static String ENABLE_NETWORK = "Network.enable";
-
-	public final static String REQUEST_WILLBESENT = "Network.requestWillBeSent";
-
-	public final static String GET_RESPONSE_BODY = "Network.getResponseBody";
-
 }
