@@ -23,10 +23,10 @@ public class Document {
 
 	public String html(Protocol client) throws IOException, InterruptedException {
 		String rs = "";
-		do {
-			rs = client.send(getDocument());
-			rs = client.send(resolveNode(rs));
-		} while (new Json(rs).object().has("error"));
+		// do {
+		rs = client.send(getDocument());
+		rs = client.send(resolveNode(rs));
+		// } while (new Json(rs).object().has("error"));
 		rs = client.send(callFunctionOn(rs));
 		String html = new Json(rs).select(new String[] { "result", "result" }).object().get("value").toString();
 		return html;

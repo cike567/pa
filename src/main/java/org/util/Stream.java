@@ -41,7 +41,6 @@ public class Stream {
 	public static void write(InputStream input, File file) throws IOException {
 		RandomAccessFile rf = new RandomAccessFile(file, "rw");
 		rf.write(toByte(input));
-		input.close();
 		rf.close();
 	}
 

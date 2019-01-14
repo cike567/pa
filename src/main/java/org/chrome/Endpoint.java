@@ -13,7 +13,7 @@ public enum Endpoint {
 	LIST("/json"),
 
 	//
-	PROTOCOL("/json/protocol/"),
+	PROTOCOL("/json/protocol"),
 
 	// {url}
 	NEW("/json/new?"),

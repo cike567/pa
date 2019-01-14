@@ -20,6 +20,14 @@ public class Strings {
 		return this;
 	}
 
+	public Strings sub(int b, int e) {
+		if (e < 0) {
+			e = temp.length() + e;
+		}
+		temp = temp.substring(b, e);
+		return this;
+	}
+
 	public String value(String fix) {
 		int index = temp.indexOf(fix);
 		if (index > -1) {
@@ -28,7 +36,7 @@ public class Strings {
 		return "";
 	}
 
-	public String value() {
+	public String toString() {
 		return temp;
 	}
 

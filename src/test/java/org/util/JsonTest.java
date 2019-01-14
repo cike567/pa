@@ -46,6 +46,13 @@ public class JsonTest {
 
 	}
 
+	@Test
+	public void testValue() {
+		String temp = "f[]a:[{\"id\":1},{}b";
+		Object obj = new Json(temp).value(new String[] { "id" });
+		System.out.println(obj);
+	}
+
 	// @Test
 	public void testJson() throws IOException {
 		String fileName = "1541691636009.html";

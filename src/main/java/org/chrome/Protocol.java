@@ -20,10 +20,11 @@ import lombok.Getter;
 @Getter
 public class Protocol implements Runnable {
 
-	public void navigate(String url) throws IOException, InterruptedException {
+	public Protocol navigate(String url) throws IOException, InterruptedException {
 		Request navigate = new Request("Page.navigate");
 		navigate.setParams("url", url);
 		send(navigate);
+		return this;
 	}
 
 	public String document() throws IOException, InterruptedException {

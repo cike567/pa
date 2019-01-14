@@ -18,7 +18,7 @@ public class Tomcatembed {
 		String name = servlet.getClass().getSimpleName();
 		System.out.println("" + name);
 		tomcat.addServlet(root, name, (javax.servlet.Servlet) servlet);
-		root.addServletMappingDecoded("/" + path, name);
+		root.addServletMappingDecoded(String.format("/%s/*", path), name);
 		return this;
 	}
 
@@ -30,6 +30,7 @@ public class Tomcatembed {
 	public void startup(int port) throws LifecycleException {
 		System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", "{}");
 		tomcat.setPort(port);
+		tomcat.getConnector();
 		tomcat.start();
 		tomcat.getServer().await();
 	}

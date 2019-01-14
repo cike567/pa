@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 
-import org.chrome.EndpointServlet;
 import org.util.CMD;
 import org.util.Jar;
 import org.util.Tomcatembed;
@@ -23,7 +22,7 @@ public class App {
 		App app = new App(args);
 		try {
 			HttpServlet servlet = new EndpointServlet(app.PORT_CHROME);
-			Tomcatembed tomcat = Tomcatembed.tomcat().addServlet(servlet, "ws");
+			Tomcatembed tomcat = Tomcatembed.tomcat().addServlet(servlet, "json");
 			tomcat.startup(app.PORT_TOMCAT);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -45,7 +44,7 @@ public class App {
 	private String TOMCAT = "t";
 
 	private int PORT_CHROME = 9222;
-	private int PORT_TOMCAT = 9090;
+	private int PORT_TOMCAT = 9000;
 
 	private Map<String, Object> args;
 

@@ -1,10 +1,12 @@
 package org.chrome;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.util.Files;
 
 /**
  * 
@@ -13,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ProtocolTest {
 
-	@Test
+	// @Test
 	public void testRequest() throws IOException, InterruptedException {
 		// Exec.kill("chrome");
 		String url = "https://www.baidu.com/";
@@ -27,6 +29,18 @@ public class ProtocolTest {
 		 * while (true) { String line = r.readLine(); if ("quit".equals(line)) { break;
 		 * } client.send(line); }
 		 */
+	}
+
+	@Test
+	public void testDocument() throws IOException, InterruptedException {
+		// Exec.kill("chrome");
+		String url = "https://www.12306.cn";
+		// url = "https://www.baidu.com/";
+		Protocol client = Devtools.protocol();
+		String rs = client.navigate(url).document();
+		File file = Files.write(rs, "html");
+		System.out.println(file.getAbsolutePath());
+
 	}
 
 	// @Test

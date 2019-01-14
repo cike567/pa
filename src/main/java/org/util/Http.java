@@ -29,7 +29,7 @@ public class Http {
 	}
 
 	public static String get(String http) throws IOException {
-		return get(http, GBK);
+		return get(http, UTF8);
 	}
 
 	public static String get(String http, String charset) throws IOException {
@@ -49,7 +49,7 @@ public class Http {
 
 	public static Map<String, String> args(String url) {
 		String fix = "?";
-		String temp = new Strings(url).sub(fix).value();
+		String temp = new Strings(url).sub(fix).toString();
 		Map<String, String> args = new HashMap<String, String>(10);
 		String[] arg = temp.split("&");
 		for (String t : arg) {
